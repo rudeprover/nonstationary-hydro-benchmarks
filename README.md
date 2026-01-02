@@ -48,6 +48,7 @@ Metrics and diagnostics focus on:
 ---
 ## Repository Structure
 
+```text
 .
 ├── data/                  # Example data loaders or preprocessed samples
 ├── models/
@@ -59,6 +60,7 @@ Metrics and diagnostics focus on:
 ├── notebooks/
 │   └── benchmark.ipynb     # End-to-end benchmarking notebook
 └── README.md
+```
 
 
 ---
