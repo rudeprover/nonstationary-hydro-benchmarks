@@ -46,5 +46,43 @@ Metrics and diagnostics focus on:
 - Diagnostic plots highlighting model behavior during extreme events
 
 ---
-
 ## Repository Structure
+
+.
+├── data/                  # Example data loaders or preprocessed samples
+├── models/
+│   ├── lstm.py             # PyTorch LSTM model
+│   └── baselines.py        # ARIMA and persistence baselines
+├── evaluation/
+│   ├── metrics.py          # Standard and extreme-focused metrics
+│   └── plots.py            # Diagnostic and comparison plots
+├── notebooks/
+│   └── benchmark.ipynb     # End-to-end benchmarking notebook
+└── README.md
+
+
+---
+
+## Benchmarking Workflow
+The main notebook (`benchmark.ipynb`) follows a clear, reproducible structure:
+1. Problem definition and motivation
+2. Data preparation and non-stationary train/test split
+3. Statistical baselines
+4. PyTorch model training
+5. Evaluation with emphasis on extremes and OOD behavior
+6. Diagnostic plots and comparative analysis
+7. Discussion of generalizability and limitations
+
+---
+
+## Philosophy
+This repository prioritizes **clarity, reproducibility, and critical evaluation** over model complexity.  
+It is intended as a foundation for:
+- Hybrid ML–process modeling
+- Trend-aware and non-stationary architectures
+- Explainable and causal analysis of model behavior in environmental systems
+
+---
+
+## License
+This project is released for research and educational use. Please cite appropriately if used in academic work.
