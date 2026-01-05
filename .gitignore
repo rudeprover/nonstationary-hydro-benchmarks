@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.pyc
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Conda / environments
+anaconda_projects/
+.env
+*.yml
+
+# Data (raw, large files)
+data/raw/
+data/curated/
+
+# OS
+.DS_Store
+Thumbs.db
