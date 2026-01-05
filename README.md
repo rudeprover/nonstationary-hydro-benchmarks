@@ -23,6 +23,19 @@ The benchmarking workflow is demonstrated using **publicly available hydro-clima
 
 The codebase is dataset-agnostic and can be adapted to other regional or global environmental datasets.
 
+## Data Organization Philosophy
+
+This repository follows a CAMELS-style data organization.
+
+- Spatial data (gauge locations, basin boundaries) are used only for
+  gauge selection and documentation.
+- All modeling and evaluation are performed on gauge-wise time series.
+
+Each gauge is treated as an independent time-series experiment.
+No spatial joins of daily time series to shapefiles are performed.
+
+The primary key linking all datasets is `gauge_id`.
+
 ---
 
 ## Models Included
@@ -50,16 +63,27 @@ Metrics and diagnostics focus on:
 
 ```text
 .
-├── data/                  # Example data loaders or preprocessed samples
-├── models/
-│   ├── lstm.py             # PyTorch LSTM model
-│   └── baselines.py        # ARIMA and persistence baselines
-├── evaluation/
-│   ├── metrics.py          # Standard and extreme-focused metrics
-│   └── plots.py            # Diagnostic and comparison plots
+├── README.md                # already drafted (good)
+├── data/
+│   ├── README.md            # describe data philosophy
+│   ├── gauges.txt           # list of gauge IDs used
+│   ├── forcings/
+│   └── discharge/
+├── src/
+│   ├── data/
+│   │   └── loader.py
+│   ├── splits/
+│   │   └── nonstationary.py
+│   ├── models/
+│   │   ├── baselines.py
+│   │   └── lstm.py
+│   └── evaluation/
+│       ├── metrics.py
+│       └── extremes.py
 ├── notebooks/
-│   └── benchmark.ipynb     # End-to-end benchmarking notebook
-└── README.md
+│   └── 01_exploration.ipynb
+└── environment.yml
+
 ```
 
 
