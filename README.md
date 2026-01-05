@@ -63,7 +63,7 @@ Metrics and diagnostics focus on:
 
 ```text
 .
-├── README.md                # already drafted (good)
+├── README.md                
 ├── data/
 │   ├── README.md            # describe data philosophy
 │   ├── gauges.txt           # list of gauge IDs used
