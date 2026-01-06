@@ -1,12 +1,10 @@
-import pandas as pd
 from pathlib import Path
+import pandas as pd
 
-DATA_DIR = Path("data/curated")
+BASE_DIR = Path(__file__).resolve().parents[2]
+DATA_DIR = BASE_DIR / "data" / "curated"
 
 def load_precipitation(gauge_id):
-    """
-    Load daily precipitation time series for a gauge.
-    """
     path = DATA_DIR / "forcings" / f"{gauge_id}.csv"
     df = pd.read_csv(path)
 
