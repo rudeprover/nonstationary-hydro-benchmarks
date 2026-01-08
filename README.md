@@ -104,6 +104,9 @@ Metrics and diagnostics include:
 │   └── splits/
 │       └── nonstationary.py
 └── environment.yml
+```
+
+
 ## Benchmarking Workflow
 
 The notebooks follow a **diagnostic-first workflow**:
