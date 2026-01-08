@@ -1,114 +1,142 @@
 # Benchmarking Machine Learning and Statistical Models for Non-Stationary Hydro-Climatic Time Series
 
 ## Overview
-This repository provides a **reproducible benchmarking framework** for evaluating machine learning and classical statistical models on **non-stationary hydro-climatic time series**, with a particular focus on **extreme events and out-of-distribution (OOD) behavior**.  
-The aim is not to introduce a novel architecture, but to **systematically assess model generalizability** under changing climatic and land-surface conditions—a key challenge in flood risk assessment and early warning.
+This repository provides a **reproducible benchmarking framework** for evaluating statistical and machine-learning models on **non-stationary hydro-climatic time series**, with a particular focus on **extreme events and out-of-distribution (OOD) behavior**.
 
-The workflow is designed to reflect real-world hydro-climatic settings, where assumptions of stationarity often break down and robust prediction of extremes is critical.
+The central motivation is not architectural novelty, but to **systematically assess model robustness and generalizability** under distributional shifts—conditions that commonly arise due to climate variability, long-term change, and land-surface alterations.
+
+**Version 1 (current)** focuses on establishing **diagnostic baselines** and understanding how classical assumptions fail before introducing more complex models.
 
 ---
 
 ## Key Objectives
-- Benchmark **deep learning time-series models** (implemented in PyTorch) against **traditional statistical baselines** (e.g., ARIMA)
-- Evaluate model performance under **non-stationary conditions**
-- Focus explicitly on **extreme events**, rather than only mean behavior
-- Provide a **transparent, extensible baseline** for future hybrid and physics-aware modeling
+- Benchmark **classical statistical baselines** against future machine-learning models
+- Explicitly evaluate performance under **non-stationary train–test splits**
+- Assess model behavior during **hydro-climatic extremes**, not only mean conditions
+- Provide a **transparent, extensible baseline** for subsequent ML, hybrid, and physics-aware models
+
+---
+
+## Current Scope (v1)
+The current version of the repository focuses on:
+
+- Construction of drought indices (SPI-3 and SPI-6)
+- Diagnosis of **distributional non-stationarity** using KDE-based analysis
+- Evaluation of **persistence baselines** under strict temporal generalization
+- Evaluation of **stationary parametric models (AR(1))** trained on historical data
+- Multi-gauge replication to assess robustness across locations
+- Explicit analysis of **mean vs extreme-event error behavior**
+
+These steps establish **lower-bound and failure-mode benchmarks** that any advanced model must exceed.
 
 ---
 
 ## Datasets
 The benchmarking workflow is demonstrated using **publicly available hydro-climatic datasets**, such as:
-- CAMELS-style hydrologic datasets (meteorological forcings and streamflow)
-- Observational or reanalysis-based climate time series for extreme-event analysis
 
-The codebase is dataset-agnostic and can be adapted to other regional or global environmental datasets.
+- CAMELS-style hydrologic datasets (meteorological forcings and gauge-wise observations)
+- Climate time series used for drought and extreme-event analysis
+
+The codebase is **dataset-agnostic** and can be adapted to other regional or global environmental datasets.
+
+---
 
 ## Data Organization Philosophy
+This repository follows a **CAMELS-style gauge-centric design**:
 
-This repository follows a CAMELS-style data organization.
+- Spatial data (gauge locations, basin boundaries) are used only for documentation and selection
+- All modeling and evaluation are performed on **independent gauge-wise time series**
+- No spatial joins of daily time series to shapefiles are performed
 
-- Spatial data (gauge locations, basin boundaries) are used only for
-  gauge selection and documentation.
-- All modeling and evaluation are performed on gauge-wise time series.
-
-Each gauge is treated as an independent time-series experiment.
-No spatial joins of daily time series to shapefiles are performed.
-
+Each gauge is treated as an **independent non-stationary time-series experiment**.  
 The primary key linking all datasets is `gauge_id`.
 
 ---
 
 ## Models Included
 
-### Machine Learning
-- LSTM-based time-series forecasting model (PyTorch)
+### Statistical Baselines (v1)
+- Persistence baseline (last-value prediction)
+- Stationary AR(1) model trained on historical data
 
-### Statistical Baselines
-- ARIMA / seasonal ARIMA
-- Persistence baseline (e.g., last-value or climatology)
+These baselines are intentionally simple and serve to:
+- Expose failure modes under non-stationarity
+- Establish lower-bound performance for future models
+
+### Machine Learning (planned extensions)
+- LSTM-based time-series forecasting models (PyTorch)
+- Non-stationary and regime-aware architectures
 
 ---
 
 ## Evaluation Focus
 Evaluation emphasizes **robustness and generalization**, not only overall error minimization.  
-Metrics and diagnostics focus on:
+Metrics and diagnostics include:
 
-- Standard performance metrics (RMSE, MAE)
-- **Extreme-focused evaluation** (e.g., upper/lower quantiles)
-- Skill under **distribution shift** between training and testing periods
-- Diagnostic plots highlighting model behavior during extreme events
+- Standard metrics (RMSE, MAE)
+- **Extreme-focused evaluation** (e.g., SPI < −1.5)
+- Performance under **distribution shift** between training and testing periods
+- Diagnostic plots illustrating systematic bias during extremes
 
 ---
-## Repository Structure
 
+## Repository Structure
 ```text
 .
-├── README.md                
+├── README.md
 ├── data/
-│   ├── README.md            # describe data philosophy
-│   ├── gauges.txt           # list of gauge IDs used
+│   ├── README.md
+│   ├── gauges.txt
 │   ├── forcings/
-│   └── discharge/
-├── src/
-│   ├── data/
-│   │   └── loader.py
-│   ├── splits/
-│   │   └── nonstationary.py
-│   ├── models/
-│   │   ├── baselines.py
-│   │   └── lstm.py
-│   └── evaluation/
-│       ├── metrics.py
-│       └── extremes.py
+│   └── indices/
 ├── notebooks/
-│   └── 01_exploration.ipynb
+│   ├── 01_spi_construction.ipynb
+│   ├── 02_nonstationarity_diagnostics.ipynb
+│   ├── 03_persistence_baseline.ipynb
+│   ├── 04_ar1_baseline.ipynb
+│   └── 05_multi_gauge_replication.ipynb
+├── src/
+│   ├── models/
+│   │   └── baselines.py
+│   ├── evaluation/
+│   │   ├── metrics.py
+│   │   └── extremes.py
+│   └── splits/
+│       └── nonstationary.py
 └── environment.yml
-
-```
-
-
----
-
 ## Benchmarking Workflow
-The main notebook (`benchmark.ipynb`) follows a clear, reproducible structure:
-1. Problem definition and motivation
-2. Data preparation and non-stationary train/test split
-3. Statistical baselines
-4. PyTorch model training
-5. Evaluation with emphasis on extremes and OOD behavior
-6. Diagnostic plots and comparative analysis
-7. Discussion of generalizability and limitations
+
+The notebooks follow a **diagnostic-first workflow**:
+
+1. Construction of drought indices  
+2. Detection of distributional non-stationarity  
+3. Persistence baseline under strict temporal splits  
+4. Stationary AR(1) baseline trained on historical data  
+5. Replication across gauges  
+6. Comparative evaluation with emphasis on extremes  
+7. Interpretation of failure modes and generalizability limits  
 
 ---
 
 ## Philosophy
-This repository prioritizes **clarity, reproducibility, and critical evaluation** over model complexity.  
-It is intended as a foundation for:
-- Hybrid ML–process modeling
-- Trend-aware and non-stationary architectures
-- Explainable and causal analysis of model behavior in environmental systems
+
+This repository prioritizes **clarity, reproducibility, and failure analysis** over model complexity.
+
+Before introducing advanced ML models, the framework explicitly asks:
+
+- Which assumptions fail under non-stationarity?
+- Which simple models remain robust, and why?
+- What must a more complex model demonstrably improve?
+
+The project is intended as a foundation for:
+
+- Non-stationary and regime-aware ML models  
+- Hybrid physics–ML approaches  
+- Explainable analysis of model behavior in hydro-climatic systems  
 
 ---
 
 ## License
-This project is released for research and educational use. Please cite appropriately if used in academic work.
+
+Released for research and educational use.  
+Please cite appropriately if used in academic work.
